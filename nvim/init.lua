@@ -1,4 +1,3 @@
-vim.opt.winborder = "rounded"
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.showtabline = 2
@@ -11,6 +10,7 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.number = true
 vim.opt.termguicolors = true
+vim.opt.winborder = bold
 
 
 
@@ -28,22 +28,42 @@ vim.pack.add({
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
-	{ src = "https://github.com/folke/flash.nvim" },
+	{ src = "https://github.com/smoka7/hop.nvim" },
+	{ src = "https://github.com/Hoffs/omnisharp-extended-lsp.nvim" },
 })
 
 vim.cmd("set completeopt+=noselect")
 vim.lsp.enable({
-	"lua_ls"
+	'lua_ls',
+	'omnisharp',
+	'clangd'
 })
 
 vim.opt.clipboard = "unnamedplus"
 vim.g.mapleader = " "
 
-
-
 require "mason".setup()
+require "hop".setup()
 require "vague".setup({ transparent = true })
-require "flash".setup()
+
+-- place this in one of your configuration file(s)
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+vim.keymap.set('', 'f', function()
+	hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false })
+end, { remap = true })
+vim.keymap.set('', 'F', function()
+	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+end, { remap = true })
+vim.keymap.set('', 't', function()
+	hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+end, { remap = true })
+vim.keymap.set('', 'T', function()
+	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
+end, { remap = true })
+
+
+
 
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = { 'markdown', 'lua', 'c_sharp', 'typst', 'typescript', 'javascript', 'c', 'cpp', 'glsl', 'zig', 'python', "typescriptreact", "react", },
@@ -58,7 +78,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
 			local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
 			client.server_capabilities.completionProvider.triggerCharacters = chars
-			
 			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
 		end
 	end,
@@ -76,7 +95,7 @@ require("oil").setup({
 	float = {
 		max_width = 0.3,
 		max_height = 0.6,
-		border = "rounded",
+		border = "bold",
 	},
 })
 
@@ -118,20 +137,18 @@ vim.keymap.set('n', "<leader>h", builtin.help_tags)
 vim.keymap.set('n', "<leader>ff", builtin.find_files)
 vim.keymap.set({ "n", "v", "x" }, "<leader>v", "<Cmd>edit $MYVIMRC<CR>", { desc = "Edit " .. vim.fn.expand("$MYVIMRC") })
 vim.keymap.set('n', "<leader>ps", '<cmd>lua vim.pack.update()<CR>')
-vim.keymap.set('n', '<leader>w', vim.lsp.buf.format)
-vim.keymap.set({ "n" }, "<leader>sm", builtin.man_pages, {desc = "man pages"})
-vim.keymap.set({ "n" }, "<leader>sr", builtin.lsp_references, {desc = "Show References"})
-vim.keymap.set({ "n" }, "<leader>sd", builtin.diagnostics, {desc = "Show Diagnostics"})
-vim.keymap.set({ "n" }, "<leader>si", builtin.lsp_implementations, {desc = "Jump to Implementation"})
-vim.keymap.set({ "n" }, "<leader>sT", builtin.lsp_type_definitions, {desc = "Jump to Definition"})
-vim.keymap.set({ "n" }, "<leader>ss", builtin.current_buffer_fuzzy_find, {desc = "Current Buffer Fuzzy"})
+vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format)
+vim.keymap.set({ "n" }, "<leader>sm", builtin.man_pages, { desc = "man pages" })
+vim.keymap.set({ "n" }, "<leader>sr", builtin.lsp_references, { desc = "Show References" })
+vim.keymap.set({ "n" }, "<leader>sd", builtin.diagnostics, { desc = "Show Diagnostics" })
+vim.keymap.set({ "n" }, "<leader>si", builtin.lsp_implementations, { desc = "Jump to Implementation" })
+vim.keymap.set({ "n" }, "<leader>sT", builtin.lsp_type_definitions, { desc = "Jump to Definition" })
+vim.keymap.set({ "n" }, "<leader>ss", builtin.current_buffer_fuzzy_find, { desc = "Current Buffer Fuzzy" })
 vim.keymap.set({ "n" }, "<leader>st", builtin.builtin)
-vim.keymap.set({ "n" }, "<leader>sf", builtin.live_grep)
+vim.keymap.set({ "n" }, "<leader>sf", builtin.live_grep, { desc = "Live Grep"})
 vim.keymap.set({ "n" }, "<leader>sc", builtin.git_bcommits)
-vim.keymap.set({ "n" }, "<leader>sk", builtin.keymaps, {desc = "Show keymaps"})
+vim.keymap.set({ "n" }, "<leader>sk", builtin.keymaps, { desc = "Show keymaps" })
 
 
 
 vim.cmd('colorscheme ' .. default_color)
-
-
