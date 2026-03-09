@@ -1,17 +1,18 @@
+vim.g.mapleader = " "
+
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-vim.opt.showtabline = 2
-vim.opt.signcolumn = "yes"
-vim.opt.wrap = true
-vim.opt.cursorcolumn = false
-vim.opt.ignorecase = true
 vim.opt.smartindent = true
+vim.opt.wrap = true
+vim.opt.number = true
+vim.opt.signcolumn = "yes"
+vim.opt.showtabline = 2
+vim.opt.ignorecase = true
 vim.opt.termguicolors = true
 vim.opt.undofile = true
-vim.opt.number = true
-vim.opt.termguicolors = true
-vim.opt.winborder = bold
-
+vim.opt.cursorcolumn = false
+vim.opt.clipboard = "unnamedplus"
+vim.opt.winborder = "bold"
 
 
 vim.pack.add({
@@ -19,79 +20,112 @@ vim.pack.add({
 	{ src = "https://github.com/chentoast/marks.nvim" },
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter",            version = "master" },
-	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim",              version = "0.1.8" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
+	{ src = "https://github.com/hrsh7th/nvim-cmp" },
+	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+	{ src = "https://github.com/hrsh7th/cmp-buffer" },
+	{ src = "https://github.com/hrsh7th/cmp-path" },
+	{ src = "https://github.com/hrsh7th/cmp-cmdline" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 	{ src = "https://github.com/smoka7/hop.nvim" },
+	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
 	{ src = "https://github.com/Hoffs/omnisharp-extended-lsp.nvim" },
 })
 
-vim.cmd("set completeopt+=noselect")
-vim.lsp.enable({
-	'lua_ls',
-	'omnisharp',
-	'clangd'
+
+require("vague").setup({ transparent = true })
+vim.cmd.colorscheme("vague")
+
+
+require("mason").setup()
+
+
+
+
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+vim.lsp.config("lua_ls", {
+	cmd = { "lua-language-server" },
+	filetypes = { "lua" },
+	root_markers = { ".luarc.json", ".git" },
+	capabilities = capabilities,
+	settings = { Lua = { runtime = { version = "LuaJIT" } } },
 })
 
-vim.opt.clipboard = "unnamedplus"
-vim.g.mapleader = " "
+vim.lsp.enable({ "lua_ls", "omnisharp", "clangd" })
 
-require "mason".setup()
-require "hop".setup()
-require "vague".setup({ transparent = true })
+local cmp = require("cmp")
 
--- place this in one of your configuration file(s)
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
-	hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false })
-end, { remap = true })
-vim.keymap.set('', 'F', function()
-	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false })
-end, { remap = true })
-vim.keymap.set('', 't', function()
-	hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, { remap = true })
-vim.keymap.set('', 'T', function()
-	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, { remap = true })
-
-
-
-
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = { 'markdown', 'lua', 'c_sharp', 'typst', 'typescript', 'javascript', 'c', 'cpp', 'glsl', 'zig', 'python', "typescriptreact", "react", },
-	callback = function() vim.treesitter.start() end,
+cmp.setup({
+	snippet = {
+		expand = function(args)
+			require("luasnip").lsp_expand(args.body)
+		end,
+	},
+	completion = {
+		autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged },
+	},
+	sources = cmp.config.sources({
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+	}),
+	mapping = cmp.mapping.preset.insert({
+		["<Tab>"] = cmp.mapping.select_next_item(),
+		["<S-Tab>"] = cmp.mapping.select_prev_item(),
+		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<C-Space>"] = cmp.mapping.complete(),
+	}),
+	window = {
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
+	},
 })
 
-vim.api.nvim_create_autocmd('LspAttach', {
-	group = vim.api.nvim_create_augroup('my.lsp', {}),
-	callback = function(args)
-		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-		if client:supports_method('textDocument/completion') then
-			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-			local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-			client.server_capabilities.completionProvider.triggerCharacters = chars
-			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-		end
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "lua", "c", "cpp", "c_sharp", "python", "markdown" },
+	callback = function()
+		vim.treesitter.start()
 	end,
 })
 
+
+local telescope = require("telescope")
+
+telescope.setup({
+	defaults = {
+		sorting_strategy = "ascending",
+		layout_config = {
+			prompt_position = "top",
+		},
+	},
+})
+
+local builtin = require("telescope.builtin")
+
+
+require("hop").setup()
+
+local hop = require("hop")
+local directions = require("hop.hint").HintDirection
+
+vim.keymap.set("", "f", function()
+	hop.hint_char1({ direction = directions.AFTER_CURSOR })
+end)
+
+vim.keymap.set("", "F", function()
+	hop.hint_char1({ direction = directions.BEFORE_CURSOR })
+end)
+
+
 require("oil").setup({
-	lsp_file_methods = {
-		enabled = true,
-		timeout_ms = 1000,
-		autosave_changes = true,
-	},
-	columns = {
-		"icon",
-	},
+	columns = { "icon" },
 	float = {
 		max_width = 0.3,
 		max_height = 0.6,
@@ -99,56 +133,28 @@ require("oil").setup({
 	},
 })
 
-local telescope = require("telescope")
-local default_color = "vague"
-telescope.setup({
-	defaults = {
-		preview = { treesitter = true },
-		color_devicons = true,
-		sorting_strategy = "ascending",
-		borderchars = {
-			"", -- top
-			"", -- right
-			"", -- bottom
-			"", -- left
-			"", -- top-left
-			"", -- top-right
-			"", -- bottom-right
-			"", -- bottom-left
-		},
-		path_displays = { "smart" },
-		layout_config = {
-			height = 100,
-			width = 400,
-			prompt_position = "top",
-			preview_cutoff = 40,
-		}
-	}
+
+require("actions-preview").setup({
+	backend = { "telescope" },
 })
 
--- telescope.load_extension("ui-select")
---
-local builtin = require("telescope.builtin")
+-- Keymaps
 
-vim.keymap.set('i', "jk", "<ESC>")
+vim.keymap.set("i", "jk", "<ESC>")
 
-vim.keymap.set('n', "<leader>o", ':update<CR>:source<CR>')
-vim.keymap.set('n', "<leader>h", builtin.help_tags)
-vim.keymap.set('n', "<leader>ff", builtin.find_files)
-vim.keymap.set({ "n", "v", "x" }, "<leader>v", "<Cmd>edit $MYVIMRC<CR>", { desc = "Edit " .. vim.fn.expand("$MYVIMRC") })
-vim.keymap.set('n', "<leader>ps", '<cmd>lua vim.pack.update()<CR>')
-vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format)
-vim.keymap.set({ "n" }, "<leader>sm", builtin.man_pages, { desc = "man pages" })
-vim.keymap.set({ "n" }, "<leader>sr", builtin.lsp_references, { desc = "Show References" })
-vim.keymap.set({ "n" }, "<leader>sd", builtin.diagnostics, { desc = "Show Diagnostics" })
-vim.keymap.set({ "n" }, "<leader>si", builtin.lsp_implementations, { desc = "Jump to Implementation" })
-vim.keymap.set({ "n" }, "<leader>sT", builtin.lsp_type_definitions, { desc = "Jump to Definition" })
-vim.keymap.set({ "n" }, "<leader>ss", builtin.current_buffer_fuzzy_find, { desc = "Current Buffer Fuzzy" })
-vim.keymap.set({ "n" }, "<leader>st", builtin.builtin)
-vim.keymap.set({ "n" }, "<leader>sf", builtin.live_grep, { desc = "Live Grep"})
-vim.keymap.set({ "n" }, "<leader>sc", builtin.git_bcommits)
-vim.keymap.set({ "n" }, "<leader>sk", builtin.keymaps, { desc = "Show keymaps" })
+vim.keymap.set("n", "<leader>h", builtin.help_tags)
+vim.keymap.set("n", "<leader>ff", builtin.find_files)
+vim.keymap.set("n", "<leader>sf", builtin.live_grep)
+vim.keymap.set("n", "<leader>ss", builtin.current_buffer_fuzzy_find)
 
+vim.keymap.set("n", "<leader>sr", builtin.lsp_references)
+vim.keymap.set("n", "<leader>sd", builtin.diagnostics)
+vim.keymap.set("n", "<leader>si", builtin.lsp_implementations)
 
+vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
-vim.cmd('colorscheme ' .. default_color)
+vim.keymap.set("n", "K", vim.lsp.buf.hover)
+
+vim.keymap.set("n", "<leader>o", ":update<CR>:source<CR>")
+vim.keymap.set("n", "<leader>ps", "<cmd>lua vim.pack.update()<CR>")
+vim.keymap.set("n", "<leader>v", "<Cmd>edit $MYVIMRC<CR>")
