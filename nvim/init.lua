@@ -1,6 +1,6 @@
 vim.g.mapleader = " "
 
-vim.opt.tabstop = 2
+vim.opt.tabstop = 1
 vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
 vim.opt.wrap = true
@@ -13,6 +13,7 @@ vim.opt.undofile = true
 vim.opt.cursorcolumn = false
 vim.opt.clipboard = "unnamedplus"
 vim.opt.winborder = "bold"
+vim.opt.laststatus = 3
 
 
 vim.pack.add({
@@ -20,7 +21,7 @@ vim.pack.add({
 	{ src = "https://github.com/chentoast/marks.nvim" },
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter",            version = "v0.10.0" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim",              version = "0.1.8" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
@@ -150,11 +151,14 @@ vim.keymap.set("n", "<leader>ss", builtin.current_buffer_fuzzy_find)
 vim.keymap.set("n", "<leader>sr", builtin.lsp_references)
 vim.keymap.set("n", "<leader>sd", builtin.diagnostics)
 vim.keymap.set("n", "<leader>si", builtin.lsp_implementations)
+vim.keymap.set("n", "<leader>sk", builtin.keymaps)
 
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
 vim.keymap.set("n", "K", vim.lsp.buf.hover)
 
+vim.keymap.set("n", "<leader>q", ":quit<CR>")
+vim.keymap.set("n", "<leader>w", ":write<CR>")
 vim.keymap.set("n", "<leader>o", ":update<CR>:source<CR>")
 vim.keymap.set("n", "<leader>ps", "<cmd>lua vim.pack.update()<CR>")
 vim.keymap.set("n", "<leader>v", "<Cmd>edit $MYVIMRC<CR>")
