@@ -1,5 +1,6 @@
 vim.g.mapleader = " "
 
+
 vim.opt.tabstop = 1
 vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
@@ -37,6 +38,8 @@ vim.pack.add({
 	{ src = "https://github.com/smoka7/hop.nvim" },
 	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
 	{ src = "https://github.com/Hoffs/omnisharp-extended-lsp.nvim" },
+	{ src = "https://github.com/chomosuke/typst-preview.nvim",																verison = "1.*"},
+	{ src = "https://github.com/iamcco/markdown-preview.nvim"}
 })
 
 
@@ -60,7 +63,7 @@ vim.lsp.config("lua_ls", {
 	settings = { Lua = { runtime = { version = "LuaJIT" } } },
 })
 
-vim.lsp.enable({ "lua_ls", "omnisharp", "clangd" })
+vim.lsp.enable({ "lua_ls", "omnisharp", "clangd", "tinymist", "marksman" })
 
 local cmp = require("cmp")
 
@@ -90,7 +93,7 @@ cmp.setup({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "lua", "c", "cpp", "c_sharp", "python", "markdown" },
+	pattern = { "lua", "c", "cpp", "c_sharp", "python", "markdown", "typst" },
 	callback = function()
 		vim.treesitter.start()
 	end,
@@ -159,6 +162,10 @@ vim.keymap.set("n", "K", vim.lsp.buf.hover)
 
 vim.keymap.set("n", "<leader>q", ":quit<CR>")
 vim.keymap.set("n", "<leader>w", ":write<CR>")
-vim.keymap.set("n", "<leader>o", ":update<CR>:source<CR>")
+
+vim.keymap.set("n", "<leader>os", ":update<CR>:source<CR>")
 vim.keymap.set("n", "<leader>ps", "<cmd>lua vim.pack.update()<CR>")
-vim.keymap.set("n", "<leader>v", "<Cmd>edit $MYVIMRC<CR>")
+vim.keymap.set("n", "<leader>vo", "<Cmd>edit $MYVIMRC<CR><ESC>")
+vim.keymap.set("n", "<leader>op", ":w!<CR>:Open %<CR>")
+
+vim.keymap.set("n", "<leader>mp", ":w!<CR>:MarkdownPreview<CR>")
