@@ -151,6 +151,8 @@ vim.keymap.set("n", "<leader>ff", builtin.find_files)
 vim.keymap.set("n", "<leader>sf", builtin.live_grep)
 vim.keymap.set("n", "<leader>ss", builtin.current_buffer_fuzzy_find)
 
+vim.keymap.set("n", "<leader>rn", ":set invrelativenumber<CR>")
+
 vim.keymap.set("n", "<leader>sr", builtin.lsp_references)
 vim.keymap.set("n", "<leader>sd", builtin.diagnostics)
 vim.keymap.set("n", "<leader>si", builtin.lsp_implementations)
@@ -169,3 +171,4 @@ vim.keymap.set("n", "<leader>vo", "<Cmd>edit $MYVIMRC<CR><ESC>")
 vim.keymap.set("n", "<leader>op", ":w!<CR>:Open %<CR>")
 
 vim.keymap.set("n", "<leader>mp", ":w!<CR>:MarkdownPreview<CR>")
+vim.keymap.set("n", "<leader>tp", ":w!<CR>:TypstPreview<CR>")
