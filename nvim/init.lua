@@ -39,8 +39,10 @@ vim.pack.add({
 	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
 	{ src = "https://github.com/Hoffs/omnisharp-extended-lsp.nvim" },
 	{ src = "https://github.com/chomosuke/typst-preview.nvim",																verison = "1.*"},
-	{ src = "https://github.com/iamcco/markdown-preview.nvim"}
-})
+	{ src = "https://github.com/iamcco/markdown-preview.nvim"},
+	{ src = "https://github.com/ellisonleao/carbon-now.nvim" }
+	}
+)
 
 
 require("vague").setup({ transparent = true })
@@ -48,6 +50,7 @@ vim.cmd.colorscheme("vague")
 
 
 require("mason").setup()
+require("carbon-now").setup()
 
 
 
@@ -93,7 +96,7 @@ cmp.setup({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "lua", "c", "cpp", "c_sharp", "python", "markdown", "typst" },
+	pattern = { "lua", "c", "cpp", "cs", "python", "markdown", "typst" },
 	callback = function()
 		vim.treesitter.start()
 	end,
@@ -172,3 +175,5 @@ vim.keymap.set("n", "<leader>op", ":w!<CR>:Open %<CR>")
 
 vim.keymap.set("n", "<leader>mp", ":w!<CR>:MarkdownPreview<CR>")
 vim.keymap.set("n", "<leader>tp", ":w!<CR>:TypstPreview<CR>")
+
+vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { silent = true })
