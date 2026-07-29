@@ -13,8 +13,9 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.cursorcolumn = false
 vim.opt.clipboard = "unnamedplus"
-vim.opt.winborder = "bold"
+vim.o.winborder = "bold"
 vim.opt.laststatus = 3
+vim.o.equalalways = true;
 
 
 vim.pack.add({
@@ -22,7 +23,7 @@ vim.pack.add({
 	{ src = "https://github.com/chentoast/marks.nvim" },
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter",            version = "v0.10.0" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter",             },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim",              version = "0.1.8" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
@@ -38,9 +39,10 @@ vim.pack.add({
 	{ src = "https://github.com/smoka7/hop.nvim" },
 	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
 	{ src = "https://github.com/Hoffs/omnisharp-extended-lsp.nvim" },
-	{ src = "https://github.com/chomosuke/typst-preview.nvim",																verison = "1.*"},
+	{ src = "https://github.com/chomosuke/typst-preview.nvim",},
 	{ src = "https://github.com/iamcco/markdown-preview.nvim"},
-	{ src = "https://github.com/ellisonleao/carbon-now.nvim" }
+	{ src = "https://github.com/ellisonleao/carbon-now.nvim" },
+	{ src = "https://github.com/windwp/nvim-autopairs" }
 	}
 )
 
@@ -51,6 +53,7 @@ vim.cmd.colorscheme("vague")
 
 require("mason").setup()
 require("carbon-now").setup()
+require("nvim-autopairs").setup()
 
 
 
@@ -96,7 +99,7 @@ cmp.setup({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "lua", "c", "cpp", "cs", "python", "markdown", "typst" },
+	pattern = { "lua", "c", "cpp", "c_sharp", "python", "markdown", "typst" },
 	callback = function()
 		vim.treesitter.start()
 	end,
@@ -177,3 +180,5 @@ vim.keymap.set("n", "<leader>mp", ":w!<CR>:MarkdownPreview<CR>")
 vim.keymap.set("n", "<leader>tp", ":w!<CR>:TypstPreview<CR>")
 
 vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { silent = true })
+
+
