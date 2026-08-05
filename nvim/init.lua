@@ -42,7 +42,8 @@ vim.pack.add({
 	{ src = "https://github.com/chomosuke/typst-preview.nvim",},
 	{ src = "https://github.com/iamcco/markdown-preview.nvim"},
 	{ src = "https://github.com/ellisonleao/carbon-now.nvim" },
-	{ src = "https://github.com/windwp/nvim-autopairs" }
+	{ src = "https://github.com/windwp/nvim-autopairs" },
+	{ src = "https://github.com/TheLeoP/powershell.nvim"}
 	}
 )
 
@@ -54,6 +55,10 @@ vim.cmd.colorscheme("vague")
 require("mason").setup()
 require("carbon-now").setup()
 require("nvim-autopairs").setup()
+
+require('powershell').setup({
+  bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
+})
 
 
 
@@ -69,7 +74,7 @@ vim.lsp.config("lua_ls", {
 	settings = { Lua = { runtime = { version = "LuaJIT" } } },
 })
 
-vim.lsp.enable({ "lua_ls", "omnisharp", "clangd", "tinymist", "marksman" })
+vim.lsp.enable({ "lua_ls", "omnisharp", "clangd", "tinymist", "marksman", "" })
 
 local cmp = require("cmp")
 
@@ -180,5 +185,6 @@ vim.keymap.set("n", "<leader>mp", ":w!<CR>:MarkdownPreview<CR>")
 vim.keymap.set("n", "<leader>tp", ":w!<CR>:TypstPreview<CR>")
 
 vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { silent = true })
+vim.keymap.set("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 

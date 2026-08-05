@@ -84,6 +84,10 @@
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
+    "powershell.nvim": {
+      "rev": "0c775f1c245f9e6b3e9adb20533bbc9bea00c599",
+      "src": "https://github.com/TheLeoP/powershell.nvim"
+    },
     "telescope-ui-select.nvim": {
       "rev": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2",
       "src": "https://github.com/nvim-telescope/telescope-ui-select.nvim"
