@@ -1,0 +1,29 @@
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "558188d"
+hash = "fc4c729556c3067f43d5322bce57faf3"
+
+[[plugin.deps]]
+use = "pirafrank/what-size"
+rev = "f1c6b69"
+hash = "193ead0808d5bca36942d68f679ab130"
+
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "bd3eaa5"
+hash = "f8d302ba41ab9deb4133fe3d0a64b6c6"
+
+[[plugin.deps]]
+use = "AnirudhG07/rich-preview"
+rev = "843c3fa"
+hash = "56397401675a83833f14283d8de96abf"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "68326b4"
+hash = "4f33260910430eca8a7937d9c2cfd855"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:dracula"
+rev = "4770a34"
+hash = "fee9eeb8bf3ac3ed251812cbc0452bbd"

@@ -1,0 +1,32 @@
+# ~/.config/yazi/yazi.toml
+[opener]
+extract = [
+	{ run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
+	{ run = 'ya pub extract --list %*',   desc = "Extract here", for = "windows" },
+]
+
+
+edit = [
+	{ run = 'nvim %*',    block = true, desc = "nvim",           for = "windows" },
+]
+
+[open]
+prepend_rules = [
+	{ url = "*.ini", use = "edit" },
+
+	# Multiple openers for a single rule
+	{ url = "*.html", use = [ "open", "edit" ] },
+	{ url = "*.htm", use = [ "open", "edit" ] },
+]
+
+
+[plugin]
+prepend_previewers = [
+  { url = "*.md", run = "glow" },
+   { url = "*.csv", run = "rich-preview"}, # for csv files
+ #   { name = "*.md", run = "rich-preview" }, # for markdown (.md) files
+    { url = "*.rst", run = "rich-preview"}, # for restructured text (.rst) files
+    { url = "*.ipynb", run = "rich-preview"}, # for jupyter notebooks (.ipynb)
+    { url = "*.json", run = "rich-preview"}, # for json (.json) files
+    { url = "*.lang_type", run = "rich-preview"}, # for particular language files eg. .py, .go., .lua, etc.
+]

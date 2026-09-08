@@ -43,7 +43,8 @@ vim.pack.add({
 	{ src = "https://github.com/iamcco/markdown-preview.nvim"},
 	{ src = "https://github.com/ellisonleao/carbon-now.nvim" },
 	{ src = "https://github.com/windwp/nvim-autopairs" },
-	{ src = "https://github.com/TheLeoP/powershell.nvim"}
+	{ src = "https://github.com/TheLeoP/powershell.nvim"},
+	{ src = "https://github.com/greggh/claude-code.nvim"}
 	}
 )
 
@@ -55,6 +56,7 @@ vim.cmd.colorscheme("vague")
 require("mason").setup()
 require("carbon-now").setup()
 require("nvim-autopairs").setup()
+require("claude-code").setup()
 
 require('powershell').setup({
   bundle_path = vim.fn.stdpath "data" .. "/mason/packages/powershell-editor-services",
@@ -186,5 +188,20 @@ vim.keymap.set("n", "<leader>tp", ":w!<CR>:TypstPreview<CR>")
 
 vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { silent = true })
 vim.keymap.set("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+
+vim.keymap.set('n', '<leader>kg', '<cmd>%s/kugelgruen.gif/bulletpoint.png/g<CR>')
+
+vim.keymap.set('n', '<leader>ac', '<cmd>ClaudeCode<CR>', { desc = 'Toggle Claude Code' })
+
+-- replace visually selected Text
+vim.keymap.set('v', '<C-r>', function()
+  vim.cmd('noautocmd normal! "hy')
+  local text = vim.fn.getreg('h')
+  local escaped = vim.fn.escape(text, '/\\.*$^~[]')
+  vim.api.nvim_feedkeys(':%s/' .. escaped .. '//gc' .. string.rep(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 3), 'n', false)
+end, { noremap = true })
+--
+
 
 
